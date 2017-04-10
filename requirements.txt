@@ -1,0 +1,7 @@
+appdirs==1.4.3
+numpy==1.12.1
+packaging==16.8
+protobuf==3.0.0b2
+pyparsing==2.2.0
+six==1.10.0
+tensorflow==0.10.0
