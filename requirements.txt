@@ -2,6 +2,8 @@ appdirs==1.4.3
 numpy==1.12.1
 packaging==16.8
 protobuf==3.0.0b2
+scipy==0.18.1
 pyparsing==2.2.0
 six==1.10.0
+scikit-learn==0.18.1
 tensorflow==0.10.0

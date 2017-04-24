@@ -2,7 +2,8 @@ import sys
 import logging
 
 from embeddings.neural_net_architecture import NNArtifact
-from embeddings.utils import Action, create_parser
+from embeddings.utils import Action, create_parser, convert_to_binary
+from sklearn.metrics import precision_recall_fscore_support
 import numpy as np
 
 
@@ -36,7 +37,7 @@ class LoadLabelsAction(Action):
         context['labels'] = np.genfromtxt(args.labels, dtype='str')
 
 
-class TrainAction(Action):
+class TrainAndPredictAction(Action):
     @property
     def name(self):
         return 'Train NN'
@@ -52,25 +53,24 @@ class TrainAction(Action):
         train_x, val_x, test_x = context['data'][:train_size], context['data'][train_size: val_size], context['data'][val_size:]
         train_y, val_y, test_y = context['labels'][:train_size], context['labels'][train_size: val_size], context['labels'][val_size:]
 
-        nn.train_nn(train_size + val_size, train_x)
+        nn.train_nn(train_size + val_size, train_x, train_y, val_x, val_y)
         predicted_labels = nn.predict_using_nn(test_x)
 
+        binary_real_labels = convert_to_binary(test_y)
+        performance = precision_recall_fscore_support(binary_real_labels, predicted_labels.tolist(), average='binary')
+        print(performance)
 
 def main(argv=None):
     program_shortdesc = __import__('__main__').__doc__
     actions = [
                LoadDataAction(),
                LoadLabelsAction(),
-               TrainAction()]
-               # PredictAction()]
+               TrainAndPredictAction()]
     parser = create_parser(actions, program_shortdesc)
     args = parser.parse_args(argv)
     context = {}
     for action in actions:
         action.run(args, context)
-
-
-
 
 if __name__ == '__main__':
     try:

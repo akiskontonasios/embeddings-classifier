@@ -1,4 +1,5 @@
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
+from sklearn.preprocessing import OneHotEncoder
 import numpy as np
 
 class Action(object):
@@ -52,12 +53,19 @@ def create_parser(actions, description):
 
 def dense_to_one_hot(labels_dense, num_classes=2):
     """Convert class labels from scalars to one-hot vectors"""
+
+    labels_dense_binary = [1 if label == 'yes' else 0 for label in labels_dense]
     num_labels = labels_dense.shape[0]
     index_offset = np.arange(num_labels) * num_classes
     labels_one_hot = np.zeros((num_labels, num_classes))
-    labels_one_hot.flat[index_offset + labels_dense.ravel()] = 1
+    labels_one_hot.flat[index_offset + labels_dense_binary] = 1
 
     return labels_one_hot
+
+
+def convert_to_binary(labels):
+
+    return [1 if label == 'yes' else 0 for label in labels]
 
 
 def preproc(unclean_batch_x):
