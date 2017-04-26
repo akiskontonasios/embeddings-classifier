@@ -54,7 +54,7 @@ def create_parser(actions, description):
 def dense_to_one_hot(labels_dense, num_classes=2):
     """Convert class labels from scalars to one-hot vectors"""
 
-    labels_dense_binary = [1 if label == 'yes' else 0 for label in labels_dense]
+    labels_dense_binary = [1 if label == 1 else 0 for label in labels_dense]
     num_labels = labels_dense.shape[0]
     index_offset = np.arange(num_labels) * num_classes
     labels_one_hot = np.zeros((num_labels, num_classes))
@@ -65,7 +65,7 @@ def dense_to_one_hot(labels_dense, num_classes=2):
 
 def convert_to_binary(labels):
 
-    return [1 if label == 'yes' else 0 for label in labels]
+    return [1 if label == 1 else 0 for label in labels]
 
 
 def preproc(unclean_batch_x):
